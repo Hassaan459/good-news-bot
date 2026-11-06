@@ -1,0 +1,23 @@
+name: Daily good news
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 2:00 UTC = 7:00 AM Pakistan
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install feedparser requests
+      - run: python good_news_whatsapp.py
+        env:
+          SENDER: greenapi
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          GREENAPI_URL: ${{ secrets.GREENAPI_URL }}
+          GREENAPI_ID: ${{ secrets.GREENAPI_ID }}
+          GREENAPI_TOKEN: ${{ secrets.GREENAPI_TOKEN }}
